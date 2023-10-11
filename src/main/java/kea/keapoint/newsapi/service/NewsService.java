@@ -1,6 +1,7 @@
 package kea.keapoint.newsapi.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import kea.keapoint.newsapi.dto.Article;
 import kea.keapoint.newsapi.dto.NewsApiResponse;
 import kea.keapoint.newsapi.entity.News;
@@ -15,7 +16,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import javax.transaction.Transactional;
 
 @Slf4j
 @Service

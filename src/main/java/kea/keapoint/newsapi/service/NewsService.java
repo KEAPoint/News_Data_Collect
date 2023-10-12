@@ -29,7 +29,7 @@ public class NewsService {
     private static final String NEWS_API_URL = "https://newsapi.org/v2/everything?q=bitcoin&apiKey=" + API_KEY;
 
     @Transactional
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 1500000)
     public Object collectNews() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()

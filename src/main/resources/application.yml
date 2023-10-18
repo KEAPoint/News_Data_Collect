@@ -15,3 +15,15 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+eureka:
+  instance:
+    appname: news-data-collect-server
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://172.16.213.26:8761/eureka

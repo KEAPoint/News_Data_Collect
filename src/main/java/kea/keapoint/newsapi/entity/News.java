@@ -40,7 +40,7 @@ public class News {
     private String content; // 내용
 
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;// 수집시간
 
     @Builder

@@ -1,6 +1,8 @@
 package kea.keapoint.newsapi.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import jakarta.transaction.Transactional;
 import kea.keapoint.newsapi.dto.Article;
 import kea.keapoint.newsapi.dto.NewsApiResponse;
@@ -16,6 +18,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -70,6 +75,37 @@ public class NewsService {
         }
 
         return null;
+    }
+
+    public JsonArray getTodayNewsWordCount() {
+        List<String> titleList = newsRepository.findNewsByToday()
+                .stream()
+                .map(News::getTitle)
+                .toList();
+
+        log.info(titleList.toString());
+
+        // word press에 포함하지 않을 단어
+        Set<String> stopWords = new HashSet<>(Arrays.asList("the", "is", "at", "which"));
+
+        // news title에서 단어 단위로 쪼개 어떤 단어가 몇번 사용되었는지 추출
+        Map<String, Long> wordFrequency = titleList.stream()
+                .flatMap(title -> Arrays.stream(title.split(" ")))
+                .filter(word -> !stopWords.contains(word))
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        log.info(wordFrequency.toString());
+
+        // AntChart's WordCloud에 맞는 json으로 변환
+        JsonArray jsonArray = new JsonArray();
+        wordFrequency.forEach((key, value) -> {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("x", key);
+            jsonObject.addProperty("value", value);
+            jsonArray.add(jsonObject);
+        });
+        log.info(jsonArray.toString());
+
+        return jsonArray;
     }
 
 }

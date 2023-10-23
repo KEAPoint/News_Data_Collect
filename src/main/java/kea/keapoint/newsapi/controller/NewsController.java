@@ -20,7 +20,7 @@ public class NewsController {
 
     private final NewsService newsService;
 
-    @GetMapping("/word-count")
+    @GetMapping("/word-cloud")
     public String getTodayNewsWordCount(Model model) {
         JsonArray wordCounts = newsService.getTodayNewsWordCount();
         model.addAttribute("wordCounts", wordCounts.toString());

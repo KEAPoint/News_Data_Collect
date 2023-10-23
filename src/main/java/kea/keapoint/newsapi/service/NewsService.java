@@ -34,7 +34,7 @@ public class NewsService {
     private static final String NEWS_API_URL = "https://newsapi.org/v2/everything?domains=forbes.com,bbc.com,cnn.com&language=en&apiKey=" + API_KEY;
 
     @Transactional
-    @Scheduled(fixedRate = 1500000)
+    @Scheduled(fixedRate = 900000)
     public Object collectNews() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()

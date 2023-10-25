@@ -31,7 +31,7 @@ public class NewsService {
     private final NewsRepository newsRepository;
 
     private static final String API_KEY = "0aab704ca0444158bbf24e09a74b9918";
-    private static final String NEWS_API_URL = "https://newsapi.org/v2/everything?domains=forbes.com,bbc.com,cnn.com&language=en&apiKey=" + API_KEY;
+    private static final String NEWS_API_URL = "https://newsapi.org/v2/everything?domains=forbes.com,bbc.com,cnn.com&language=en&sortBy=popularity&apiKey=" + API_KEY;
 
     @Transactional
     @Scheduled(fixedRate = 900000)

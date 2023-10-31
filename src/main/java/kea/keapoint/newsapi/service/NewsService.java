@@ -83,24 +83,28 @@ public class NewsService {
                 .map(News::getTitle)
                 .toList();
 
-        log.info(titleList.toString());
-
         // word press에 포함하지 않을 단어
-        Set<String> stopWords = new HashSet<>(Arrays.asList(".", ",", "!", "their", "a", "other", "so", "that", "being", "between", "ours", "yourselves", "what", "if", "each", "haven", "you", "they", "not", "because", "against", "mustn't", "them", "over", "you're", "are", "won't", "its", "off", "am", "with", "there", "needn't", "hadn't", "about", "nor", "just", "by", "should", "needn", "shan", "until", "that'll", "more", "you'll", "you've", "will", "mightn", "you'd", "up", "yours", "through", "hasn't", "ma", "my", "such", "itself", "under", "too", "which", "during", "was", "than", "an", "been", "down", "these", "should've", "how", "herself", "the", "here", "to", "having", "don", "t", "theirs", "does", "on", "both", "wouldn't", "don't", "only", "who", "when", "were", "into", "any", "shouldn", "and", "why", "couldn't", "haven't", "or", "where", "she", "me", "him", "at", "below", "his", "her", "then", "did", "this", "he", "it's", "few", "most", "can", "mustn", "very", "s", "himself", "again", "ll", "yourself", "further", "doing", "some", "but", "i", "couldn", "aren't", "it", "now", "ourselves", "re", "have", "after", "our", "your", "out", "wasn't", "mightn't", "themselves", "whom", "once", "is", "hadn", "y", "doesn't", "weren", "we", "before", "as", "o", "own", "above", "wouldn", "of", "all", "shan't", "be", "weren't", "while", "d", "from", "aren", "isn", "won", "didn", "no", "hasn", "those", "didn't", "isn't", "she's", "ain", "same", "shouldn't", "do", "m", "for", "hers", "had", "doesn", "myself", "in", "wasn", "has", "ve"));
+        Set<String> stopWords = new HashSet<>(Arrays.asList(".", ",", "!", "their", "a", "other", "so", "that", "being", "between", "ours", "yourselves", "what", "if", "each", "haven", "you", "they", "not", "because", "against", "mustn't", "them", "over", "you're", "are", "won't", "its", "off", "am", "with", "there", "needn't", "hadn't", "about", "nor", "just", "by", "should", "needn", "shan", "until", "that'll", "more", "you'll", "you've", "will", "mightn", "you'd", "up", "yours", "through", "hasn't", "ma", "my", "such", "itself", "under", "too", "which", "during", "was", "than", "an", "been", "down", "these", "should've", "how", "herself", "the", "here", "to", "having", "don", "t", "theirs", "does", "on", "both", "wouldn't", "don't", "only", "who", "when", "were", "into", "any", "shouldn", "and", "why", "couldn't", "haven't", "or", "where", "she", "me", "him", "at", "below", "his", "her", "then", "did", "this", "he", "it's", "few", "most", "can", "mustn", "very", "s", "himself", "again", "ll", "yourself", "further", "doing", "some", "but", "i", "couldn", "aren't", "it", "now", "ourselves", "re", "have", "after", "our", "your", "out", "wasn't", "mightn't", "themselves", "whom", "once", "is", "hadn", "y", "doesn't", "weren", "we", "before", "as", "o", "own", "above", "wouldn", "of", "all", "shan't", "be", "weren't", "while", "d", "from", "aren", "isn", "won", "didn", "no", "hasn", "those", "didn't", "isn't", "she's", "ain", "same", "shouldn't", "do", "m", "for", "hers", "had", "doesn", "myself", "in", "wasn", "has", "ve", "1", "2", "3", "4", "5", "6", "7", "8", "9"));
 
         // news title에서 단어 단위로 쪼개 어떤 단어가 몇번 사용되었는지 추출
         Map<String, Long> wordFrequency = titleList.stream()
                 .flatMap(title -> Arrays.stream(title.toLowerCase().split("\\W+")))
                 .filter(word -> !stopWords.contains(word))
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        log.info(wordFrequency.toString());
+
+        // value 값을 기준으로 내림차순 정렬하여 상위 30개의 단어 추출
+        List<Map.Entry<String, Long>> sortedWordFrequency = wordFrequency.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .limit(30)
+                .toList();
 
         // AntChart's WordCloud에 맞는 json으로 변환
         JsonArray jsonArray = new JsonArray();
-        wordFrequency.forEach((key, value) -> {
+        sortedWordFrequency.forEach(entry -> {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("x", key);
-            jsonObject.addProperty("value", value);
+            jsonObject.addProperty("x", entry.getKey());
+            jsonObject.addProperty("value", entry.getValue());
             jsonArray.add(jsonObject);
         });
         log.info(jsonArray.toString());

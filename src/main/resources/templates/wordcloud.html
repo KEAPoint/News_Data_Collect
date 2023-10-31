@@ -11,50 +11,10 @@
 
     <style>
         #container {
-            width: 800px;
+            width: 1820px;
             height: 800px;
             margin: 0;
             padding: 0;
-            position: center;
-        }
-
-        #img {
-            margin-top: 50px;
-        }
-
-        .w-btn-outline {
-            /*width: 100px;*/
-            /*height: 30px;*/
-            position: relative;
-            padding: 15px 30px;
-            border-radius: 15px;
-            font-family: "paybooc-Light", sans-serif;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            text-decoration: none;
-            font-weight: 600;
-            transition: 0.25s;
-        }
-
-        .w-btn-red-outline {
-            border: 3px solid #ff5f2e;
-            color: #6e6e6e;
-        }
-
-        .w-btn-red-outline:hover {
-            background-color: #ff5f2e;
-            color: #e1eef6;
-            cursor: pointer;
-        }
-
-        #txt {
-            width: 200px;
-            height: 32px;
-            font-size: 15px;
-            border: 0;
-            border-radius: 15px;
-            outline: none;
-            padding-left: 10px;
-            background-color: rgb(233, 233, 233);
         }
 
     </style>
@@ -85,10 +45,27 @@
                     // anyChart 사용 => t : value
                     var chart = anychart.tagCloud(data);
 
+                    // create and configure a color scale.
+                    var customColorScale = anychart.scales.ordinalColor();
+                    customColorScale.ranges([
+                        {less: 300},
+                        {from: 300, to: 400},
+                        {from: 400, to: 500},
+                        {greater: 600}
+                    ]);
+                    customColorScale.colors(["#a6a6a6", "#565656", "#262626", "#000000"]);
+
+                    // set the color scale as the color scale of the chart
+                    chart.colorScale(customColorScale);
+
+                    // add and configure a color range
+                    chart.colorRange().enabled(true);
+                    chart.colorRange().length("90%");
+
                     chart.title("My Word Cloud");
                     chart.container("container");
 
-                    chart.hovered().fill("#8711c3");
+                    chart.hovered().fill("#ff7575");
                     chart.mode("spiral");
 
                     // 글자 돌아가는거 막게
